@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <style>
+            .divcontainer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+            }
+            .center{
+                width: 20%;
+                max-height:50%;
+                min-height:60px;
+            }
+            .todoheader{
+                text-align: center;
+            }
+            .additems{
+                width: 90%;
+                height: 10%;
+                margin: 20px;
+            }
+            .addData{
+                display:flex;
+            }
+            .tasks{
+                width: 90%;
+                margin: 20px;
+            }
+            .incompleteTasks{
+                min-height: 10px;
+                overflow-y: auto;
+                max-height: 100px;
+            }
+            .incompleteTasksDisplay{
+                display:flex; 
+                width:100%;  
+            }
+            .incompleteTasksDisplay input{
+                margin-right: 10px;
+            }
+            .list-group-item{
+                height: 34px;
+                border-radius:4px;
+                padding: 6px 12px;
+                width:100%
+            }
+            .btnstyling{
+                font-size:14px; 
+            }
+        </style>
+    </head>
+    <body>        
+        <div class="divcontainer">
+            <div class="center">
+                <div style="border: 1px solid black;">
+                    <div class="todoheader">
+                        <h2>Todo Tasks</h2>
+                    </div>   
+                    <div class="additems">
+                        <div class="form-group addData">
+                            <input type="text" class="form-control" id="usr">
+                            <button  class="form-control btn btn-primary" onclick="addData()" style="width:150px">Add Items</button>
+                        </div>
+                    </div>
+                    <div class="tasks">
+                        <form>
+                            <h4>Incomplete Tasks</h4>
+                            <hr/>
+                            <div class="incompleteTasks"><ul class="list-group " id="Tasks_to_be_done"></ul></div>
+                        </form>
+                    </div>
+                    <div class="tasks">
+                        <form>
+                            <h4>Completed Tasks</h4>
+                            <hr/>
+                            <div style="min-height: 10px; max-height:20px; overflow-y: auto">   
+                            </div> 
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script> 
+            let data = [];
+            var completedTasks = [];
+            let list = document.getElementById("Tasks_to_be_done");
+            let ul = data.map(data => `<div class="incompleteTasksDisplay">
+                <input class="form-check-input" type="checkbox" onchange="checkStatus(${data.id})" id="FieldsetCheck${data.id}">
+                <li class="list-group-item">${data.name}</li>
+                <button class="btn btn-primary btnstyling"><i class="fa fa-edit"></i></button>
+                <button class="btn btn-primary btnstyling"><i class="fa fa-trash"></i></button>
+            </div>`);
+            list.innerHTML= ul;
+
+            function addData(){
+                let listdisplay = document.getElementById("usr");
+                let newInput={'id':data.length,'name':listdisplay.value, 'flag':false}
+                data.push(newInput);
+                console.log(data)
+                let ul = data.map(data => `<div class="incompleteTasksDisplay">
+                    <input class="form-check-input" type="checkbox" onchange="checkStatus(${data.id})" id="FieldsetCheck${data.id}">
+                    <li class="list-group-item">${data.name}</li>
+                    <button class="btn btn-primary btnstyling"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-primary btnstyling"><i class="fa fa-trash"></i></button>
+                </div>`);
+                list.innerHTML= ul;
+                listdisplay.value="";
+            }
+            function checkStatus(i){
+                let checkbox = document.getElementById("FieldsetCheck"+i);
+                flag = checkbox.checked;
+                document.getElementById("FieldsetCheck"+i).textContent = flag;
+                console.log(flag);
+                let ind="";
+                data.map((record,index)=> {
+                    if(record.id===i){
+                        record.flag=flag;
+                        ind=index;
+                    }
+                })
+                let completed=data.splice(ind,1);
+                completedTasks.push(completed);
+                updateTasks();
+
+            }
+        </script>
+    </body>
+</html>
